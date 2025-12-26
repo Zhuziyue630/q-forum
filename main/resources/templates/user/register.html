@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>用户注册</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>用户注册</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/register}" method="post" th:object="${registerDTO}">
+                        <!-- 用户名 -->
+                        <div class="mb-3">
+                            <label for="username" class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="username"
+                                   th:field="*{username}" required>
+                            <div class="form-text">3-50个字符，只能包含字母、数字和下划线</div>
+                            <div th:if="${#fields.hasErrors('username')}" class="text-danger">
+                                <small th:errors="*{username}"></small>
+                            </div>
+                        </div>
+
+                        <!-- 邮箱 -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">邮箱</label>
+                            <input type="email" class="form-control" id="email"
+                                   th:field="*{email}" required>
+                            <div th:if="${#fields.hasErrors('email')}" class="text-danger">
+                                <small th:errors="*{email}"></small>
+                            </div>
+                        </div>
+
+                        <!-- 密码 -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">密码</label>
+                            <input type="password" class="form-control" id="password"
+                                   th:field="*{password}" required>
+                            <div class="form-text">至少6个字符</div>
+                            <div th:if="${#fields.hasErrors('password')}" class="text-danger">
+                                <small th:errors="*{password}"></small>
+                            </div>
+                        </div>
+
+                        <!-- 确认密码 -->
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">确认密码</label>
+                            <input type="password" class="form-control" id="confirmPassword"
+                                   th:field="*{confirmPassword}" required>
+                            <div th:if="${#fields.hasErrors('confirmPassword')}" class="text-danger">
+                                <small th:errors="*{confirmPassword}"></small>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-user-plus me-2"></i>注册
+                            </button>
+                            <a th:href="@{/login}" class="btn btn-outline-secondary">
+                                已有账号？立即登录
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

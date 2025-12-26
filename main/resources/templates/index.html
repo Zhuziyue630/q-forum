@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>首页</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- 欢迎横幅 -->
+    <div class="jumbotron bg-light p-5 rounded mb-5">
+        <div class="container">
+            <h1 class="display-4">欢迎来到问答论坛</h1>
+            <p class="lead">这是一个基于Spring Boot构建的在线问答平台，您可以在这里提问、讨论、分享知识。</p>
+            <hr class="my-4">
+            <p>无论您是技术爱好者、学习者还是专业人士，这里都是您交流思想、解决问题的好地方。</p>
+            <div class="mt-4">
+                <a th:href="@{/discussions}" class="btn btn-primary btn-lg me-3">
+                    <i class="fas fa-comments me-2"></i>浏览讨论
+                </a>
+                <a th:href="@{/discussions/new}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-plus-circle me-2"></i>发起讨论
+                </a>
+                <a th:href="@{/register}" class="btn btn-outline-success btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>立即注册
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 特性介绍 -->
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                    </div>
+                    <h3 class="card-title">安全可靠</h3>
+                    <p class="card-text">采用Spring Security安全框架，内置验证码验证，确保用户信息安全。</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-comments fa-3x text-success"></i>
+                    </div>
+                    <h3 class="card-title">自由讨论</h3>
+                    <p class="card-text">支持多行文本，正常换行显示，让您的讨论内容更加清晰易读。</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-bolt fa-3x text-warning"></i>
+                    </div>
+                    <h3 class="card-title">快速响应</h3>
+                    <p class="card-text">基于Spring Boot构建，启动快速，响应迅速，提供流畅的用户体验。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 最新讨论预览 -->
+    <div class="card">
+        <div class="card-header bg-light">
+            <h3 class="mb-0"><i class="fas fa-newspaper me-2"></i>最新讨论</h3>
+        </div>
+        <div class="card-body">
+            <div th:if="${recentDiscussions == null or #lists.isEmpty(recentDiscussions)}" class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                暂无讨论，<a th:href="@{/register}" class="alert-link">注册</a>后发起第一个讨论吧！
+            </div>
+            <div th:if="${recentDiscussions != null and not #lists.isEmpty(recentDiscussions)}">
+                <div class="list-group">
+                    <a th:href="@{/discussions/{id}(id=${discussion.id})}"
+                       th:each="discussion : ${recentDiscussions}"
+                       class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1" th:text="${discussion.title}"></h5>
+                            <small th:text="${#dates.format(discussion.createdAt, 'MM-dd HH:mm')}"></small>
+                        </div>
+                        <p class="mb-1 text-muted" style="max-height: 40px; overflow: hidden;">
+                            <span th:text="${#strings.substring(discussion.content, 0, 80)}"></span>
+                            <span th:if="${#strings.length(discussion.content) > 80}">...</span>
+                        </p>
+                        <small>
+                            <i class="fas fa-user me-1"></i>
+                            <span th:text="${discussion.author.username}"></span>
+                            <i class="fas fa-comment ms-3 me-1"></i>
+                            <span th:text="${discussion.replies.size()}">0</span>条回复
+                        </small>
+                    </a>
+                </div>
+                <div class="text-center mt-3">
+                    <a th:href="@{/discussions}" class="btn btn-outline-primary">
+                        查看更多讨论 <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

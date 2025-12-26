@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-plus-circle me-2"></i>发起新讨论</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/discussions/new}" method="post">
+                        <!-- 标题 -->
+                        <div class="mb-4">
+                            <label for="title" class="form-label">
+                                <strong>标题</strong>
+                                <small class="text-muted">（请简明扼要地描述您的问题）</small>
+                            </label>
+                            <input type="text" class="form-control form-control-lg"
+                                   id="title" name="title"
+                                   placeholder="请输入讨论标题"
+                                   required maxlength="200">
+                            <div class="form-text">标题应该清晰、简洁，不超过200个字符</div>
+                        </div>
+
+                        <!-- 内容 -->
+                        <div class="mb-4">
+                            <label for="content" class="form-label">
+                                <strong>内容</strong>
+                                <small class="text-muted">（详细描述您的问题）</small>
+                            </label>
+                            <textarea class="form-control" id="content" name="content"
+                                      rows="12" placeholder="请输入详细内容..." required></textarea>
+                            <div class="form-text">
+                                支持多行文本，换行会被保留显示。请详细描述您的问题，以便获得更好的回答。
+                            </div>
+                        </div>
+
+                        <!-- 提交按钮 -->
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/discussions}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>取消
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-2"></i>发布讨论
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 发帖指南 -->
+            <div class="card mt-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-lightbulb me-2"></i>发帖指南</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>请为您的讨论选择一个明确、具体的标题</li>
+                        <li>在内容中详细描述您的问题，包括相关背景信息</li>
+                        <li>多行文本会正常换行显示，无需特殊格式</li>
+                        <li>避免发布重复内容，发帖前请先搜索</li>
+                        <li>保持礼貌和尊重，共同维护良好的讨论氛围</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="scripts">
+    <script>
+        // 字数统计
+        document.addEventListener('DOMContentLoaded', function() {
+            const titleInput = document.getElementById('title');
+            const contentInput = document.getElementById('content');
+
+            function updateCount() {
+                const titleCount = titleInput.value.length;
+                const contentCount = contentInput.value.length;
+
+                console.log(`标题: ${titleCount}/200, 内容: ${contentCount}`);
+            }
+
+            titleInput.addEventListener('input', updateCount);
+            contentInput.addEventListener('input', updateCount);
+        });
+    </script>
+</div>
+</body>
+</html>

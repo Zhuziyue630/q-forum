@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title th:text="${discussion.title}">讨论详情</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- 返回按钮 -->
+    <div class="mb-3">
+        <a th:href="@{/discussions}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i>返回列表
+        </a>
+    </div>
+
+    <!-- 讨论内容 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title mb-3" th:text="${discussion.title}"></h2>
+
+            <!-- 讨论元信息 -->
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                <div>
+                        <span class="badge bg-info me-2">
+                            <i class="fas fa-user me-1"></i>
+                            <span th:text="${discussion.author.username}">作者</span>
+                        </span>
+                    <span class="badge bg-secondary me-2">
+                            <i class="fas fa-clock me-1"></i>
+                            <span th:text="${#dates.format(discussion.createdAt, 'yyyy-MM-dd HH:mm')}">时间</span>
+                        </span>
+                    <span class="badge bg-light text-dark me-2">
+                            <i class="fas fa-eye me-1"></i>
+                            <span th:text="${discussion.viewCount}">0</span>次浏览
+                        </span>
+                    <span class="badge bg-light text-dark">
+                            <i class="fas fa-comment me-1"></i>
+                            <span th:text="${discussion.replies.size()}">0</span>条回复
+                        </span>
+                </div>
+            </div>
+
+            <!-- 讨论内容 -->
+            <div class="mb-4 pre-formatted" th:text="${discussion.content}"></div>
+
+            <!-- 更新时间 -->
+            <div class="text-end">
+                <small class="text-muted">
+                    <i class="fas fa-history me-1"></i>
+                    最后更新于：<span th:text="${#dates.format(discussion.updatedAt, 'yyyy-MM-dd HH:mm')}"></span>
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- 回复列表 -->
+    <div class="mb-4">
+        <h4 class="mb-3">
+            <i class="fas fa-comments me-2"></i>
+            回复（<span th:text="${discussion.replies.size()}">0</span>）
+        </h4>
+
+        <div th:if="${#lists.isEmpty(discussion.replies)}" class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>暂无回复，快来第一个回复吧！
+        </div>
+
+        <div th:each="reply : ${discussion.replies}" class="card mb-3 reply-item">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <strong th:text="${reply.author.username}">用户</strong>
+                        <small class="text-muted ms-2">
+                            <i class="fas fa-clock me-1"></i>
+                            <span th:text="${#dates.format(reply.createdAt, 'yyyy-MM-dd HH:mm')}">时间</span>
+                        </small>
+                    </div>
+                </div>
+                <div class="pre-formatted mb-2" th:text="${reply.content}"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 回复表单 -->
+    <div class="card">
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="fas fa-reply me-2"></i>发表回复</h5>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/discussions/{id}/replies(id=${discussion.id})}" method="post">
+                <div class="mb-3">
+                        <textarea class="form-control" name="content" rows="5"
+                                  placeholder="请输入您的回复内容..." required></textarea>
+                    <div class="form-text">支持多行文本，正常换行显示</div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane me-2"></i>提交回复
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        请先<a th:href="@{/login}" class="alert-link">登录</a>后发表回复
+    </div>
+</div>
+
+<div layout:fragment="scripts">
+    <script>
+        // 自动滚动到回复表单
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('reply')) {
+                const replyForm = document.querySelector('form');
+                if (replyForm) {
+                    replyForm.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    </script>
+</div>
+</body>
+</html>
